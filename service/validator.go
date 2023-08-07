@@ -30,6 +30,10 @@ func validatePhoneNumber(phoneNumber string) *common.CustomError {
 		errDetails = append(errDetails, "phone number must start with +62")
 	}
 
+	if !containsOnlyNumber(phoneNumber[1:]) { // skip the +
+		errDetails = append(errDetails, "phone number must only contain number")
+	}
+
 	if len(errDetails) != 0 {
 		return common.NewCustomError(common.ErrInvalidInput, "invalid request params", errDetails...)
 	}
@@ -80,4 +84,13 @@ func hasCapitalLetter(s string) bool {
 		}
 	}
 	return false
+}
+
+func containsOnlyNumber(s string) bool {
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
 }
