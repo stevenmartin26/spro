@@ -1,0 +1,3 @@
+Login API
+    - 429 response is added on the API contract but it's not implemented yet
+    - The purpose is to limit failed login attempts
