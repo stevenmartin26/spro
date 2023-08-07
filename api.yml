@@ -1,58 +1,279 @@
-# This is the OpenAPI specification for your service. It is used to generate the client code.
-# To generate the server code, use the Gradle task `openApiGenerate`. The 
-# generated code will be placed in `build/generate-resources/main`.
-#
-# We will evaluate you based on how well you design your API.
-# 1. How well it follows REST principles.
-# 2. How easy it is to understand and use.
-#
-# References
-# 1. https://swagger.io/specification/
-openapi: "3.0.0"
+openapi: 3.0.0
 info:
   version: 1.0.0
   title: User Service
   license:
     name: MIT
 servers:
-  - url: http://localhost
+  - url: 'http://localhost:8080'
 paths:
-  /hello:
-    get:
-      summary: This is just a test endpoint to get you started. Please delete this endpoint.
-      operationId: hello
-      parameters:
-        - name: id
-          in: query
-          required: true
-          schema:
-            type: integer
+  /api/v1/users/register:
+    parameters: []
+    post:
+      summary: User Registration
+      operationId: post-api-v1-users-register
       responses:
-        '200':
-          description: Test return
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/HelloResponse"
-        '404':
-          description: Not found
+        '201':
+          description: Created
+          headers: {}
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/RegisterResponse'
+              examples:
+                Example 1:
+                  value:
+                    user_id: a169451c-8525-4352-b8ca-070dd449a1a5
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              Example 1:
+                value:
+                  phone_number: '+628111111111'
+                  full_name: string
+                  password: myPassw0rd!
+  /api/v1/users/login:
+    post:
+      summary: User Login
+      operationId: post-api-v1-users-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+  /api/v1/users/profile:
+    get:
+      summary: Get My Profile
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProfileResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: get-v1-users-profile
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: Bearer <access token>
+          required: true
+    put:
+      summary: Update My Profile
+      operationId: put-v1-users-profile
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: Bearer <access token>
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
 components:
   schemas:
-    HelloResponse:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
     ErrorResponse:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: string
+            required:
+              - error
+      required:
+        - message
+    RegisterRequest:
+      title: RegisterRequest
+      x-stoplight:
+        id: 42nhucijrz9i8
+      type: object
+      properties:
+        phone_number:
+          type: string
+          pattern: '^\+62.{7,10}$'
+          minLength: 10
+          maxLength: 13
+        full_name:
+          type: string
+          minLength: 3
+          maxLength: 60
+        password:
+          type: string
+          pattern: '^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,64}$'
+          minLength: 6
+          maxLength: 64
+      required:
+        - phone_number
+        - full_name
+        - password
+    RegisterResponse:
+      title: RegisterResponse
+      x-stoplight:
+        id: jyz2axrgcvvtb
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+      required:
+        - user_id
+    LoginRequest:
+      title: LoginRequest
+      x-stoplight:
+        id: ybeasi0g6thtk
+      type: object
+      properties:
+        phone_number:
+          type: string
+        password:
+          type: string
+      required:
+        - phone_number
+        - password
+    LoginResponse:
+      title: LoginResponse
+      x-stoplight:
+        id: 8b93b6e1cjpx2
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        access_token:
+          type: string
+      required:
+        - user_id
+        - access_token
+    TooManyRequestResponse:
+      title: TooManyRequestResponse
+      x-stoplight:
+        id: 3ajsq8dg97b78
+      type: object
+      properties:
+        retry_at:
+          type: string
+          format: date-time
+      required:
+        - retry_at
+    GetProfileResponse:
+      title: GetProfileResponse
+      x-stoplight:
+        id: a7z9w2j0fiwfb
+      type: object
+      properties:
+        full_name:
+          type: string
+        phone_number:
+          type: string
+      required:
+        - full_name
+        - phone_number
+    UpdateProfileRequest:
+      title: UpdateProfileRequest
+      x-stoplight:
+        id: 39i6xhfuuz7m8
+      type: object
+      properties:
+        phone_number:
+          type: string
+          pattern: '^\+62.{7,10}$'
+          minLength: 10
+          maxLength: 13
+        full_name:
+          type: string
+          minLength: 3
+          maxLength: 60
+      required:
+        - phone_number
+        - full_name

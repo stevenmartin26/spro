@@ -8,43 +8,128 @@ import (
 	context "context"
 	reflect "reflect"
 
+	common "github.com/SawitProRecruitment/UserService/common"
+	model "github.com/SawitProRecruitment/UserService/model"
 	gomock "github.com/golang/mock/gomock"
+	uuid "github.com/google/uuid"
 )
 
-// MockRepositoryInterface is a mock of RepositoryInterface interface.
-type MockRepositoryInterface struct {
+// MockUserRepository is a mock of UserRepository interface.
+type MockUserRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockRepositoryInterfaceMockRecorder
+	recorder *MockUserRepositoryMockRecorder
 }
 
-// MockRepositoryInterfaceMockRecorder is the mock recorder for MockRepositoryInterface.
-type MockRepositoryInterfaceMockRecorder struct {
-	mock *MockRepositoryInterface
+// MockUserRepositoryMockRecorder is the mock recorder for MockUserRepository.
+type MockUserRepositoryMockRecorder struct {
+	mock *MockUserRepository
 }
 
-// NewMockRepositoryInterface creates a new mock instance.
-func NewMockRepositoryInterface(ctrl *gomock.Controller) *MockRepositoryInterface {
-	mock := &MockRepositoryInterface{ctrl: ctrl}
-	mock.recorder = &MockRepositoryInterfaceMockRecorder{mock}
+// NewMockUserRepository creates a new mock instance.
+func NewMockUserRepository(ctrl *gomock.Controller) *MockUserRepository {
+	mock := &MockUserRepository{ctrl: ctrl}
+	mock.recorder = &MockUserRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder {
+func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 	return m.recorder
 }
 
-// GetTestById mocks base method.
-func (m *MockRepositoryInterface) GetTestById(ctx context.Context, input GetTestByIdInput) (GetTestByIdOutput, error) {
+// GetByPhoneNumber mocks base method.
+func (m *MockUserRepository) GetByPhoneNumber(ctx context.Context, phoneNumber string) (*model.User, *common.CustomError) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTestById", ctx, input)
-	ret0, _ := ret[0].(GetTestByIdOutput)
-	ret1, _ := ret[1].(error)
+	ret := m.ctrl.Call(m, "GetByPhoneNumber", ctx, phoneNumber)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(*common.CustomError)
 	return ret0, ret1
 }
 
-// GetTestById indicates an expected call of GetTestById.
-func (mr *MockRepositoryInterfaceMockRecorder) GetTestById(ctx, input interface{}) *gomock.Call {
+// GetByPhoneNumber indicates an expected call of GetByPhoneNumber.
+func (mr *MockUserRepositoryMockRecorder) GetByPhoneNumber(ctx, phoneNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTestById", reflect.TypeOf((*MockRepositoryInterface)(nil).GetTestById), ctx, input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByPhoneNumber", reflect.TypeOf((*MockUserRepository)(nil).GetByPhoneNumber), ctx, phoneNumber)
+}
+
+// GetByUserID mocks base method.
+func (m *MockUserRepository) GetByUserID(ctx context.Context, userID uuid.UUID) (*model.User, *common.CustomError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByUserID", ctx, userID)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(*common.CustomError)
+	return ret0, ret1
+}
+
+// GetByUserID indicates an expected call of GetByUserID.
+func (mr *MockUserRepositoryMockRecorder) GetByUserID(ctx, userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByUserID", reflect.TypeOf((*MockUserRepository)(nil).GetByUserID), ctx, userID)
+}
+
+// Save mocks base method.
+func (m *MockUserRepository) Save(ctx context.Context, user model.User) (uuid.UUID, *common.CustomError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", ctx, user)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(*common.CustomError)
+	return ret0, ret1
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockUserRepositoryMockRecorder) Save(ctx, user interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockUserRepository)(nil).Save), ctx, user)
+}
+
+// Update mocks base method.
+func (m *MockUserRepository) Update(ctx context.Context, user model.User) *common.CustomError {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, user)
+	ret0, _ := ret[0].(*common.CustomError)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockUserRepositoryMockRecorder) Update(ctx, user interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserRepository)(nil).Update), ctx, user)
+}
+
+// MockLoginLogRepository is a mock of LoginLogRepository interface.
+type MockLoginLogRepository struct {
+	ctrl     *gomock.Controller
+	recorder *MockLoginLogRepositoryMockRecorder
+}
+
+// MockLoginLogRepositoryMockRecorder is the mock recorder for MockLoginLogRepository.
+type MockLoginLogRepositoryMockRecorder struct {
+	mock *MockLoginLogRepository
+}
+
+// NewMockLoginLogRepository creates a new mock instance.
+func NewMockLoginLogRepository(ctrl *gomock.Controller) *MockLoginLogRepository {
+	mock := &MockLoginLogRepository{ctrl: ctrl}
+	mock.recorder = &MockLoginLogRepositoryMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockLoginLogRepository) EXPECT() *MockLoginLogRepositoryMockRecorder {
+	return m.recorder
+}
+
+// Save mocks base method.
+func (m *MockLoginLogRepository) Save(ctx context.Context, log model.LoginLog) (uuid.UUID, *common.CustomError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", ctx, log)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(*common.CustomError)
+	return ret0, ret1
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockLoginLogRepositoryMockRecorder) Save(ctx, log interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockLoginLogRepository)(nil).Save), ctx, log)
 }

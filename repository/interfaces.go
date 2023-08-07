@@ -1,11 +1,20 @@
-// This file contains the interfaces for the repository layer.
-// The repository layer is responsible for interacting with the database.
-// For testing purpose we will generate mock implementations of these
-// interfaces using mockgen. See the Makefile for more information.
 package repository
 
-import "context"
+import (
+	"context"
 
-type RepositoryInterface interface {
-	GetTestById(ctx context.Context, input GetTestByIdInput) (output GetTestByIdOutput, err error)
+	"github.com/SawitProRecruitment/UserService/common"
+	"github.com/SawitProRecruitment/UserService/model"
+	"github.com/google/uuid"
+)
+
+type UserRepository interface {
+	Save(ctx context.Context, user model.User) (uuid.UUID, *common.CustomError)
+	GetByPhoneNumber(ctx context.Context, phoneNumber string) (*model.User, *common.CustomError)
+	GetByUserID(ctx context.Context, userID uuid.UUID) (*model.User, *common.CustomError)
+	Update(ctx context.Context, user model.User) *common.CustomError
+}
+
+type LoginLogRepository interface {
+	Save(ctx context.Context, log model.LoginLog) (uuid.UUID, *common.CustomError)
 }
